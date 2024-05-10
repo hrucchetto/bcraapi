@@ -11,10 +11,11 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
-START_DATE = (date.today() + timedelta(days=-60)).strftime('%Y-%m-%d') 
-END_DATE = date.today().strftime('%Y-%m-%d')
 pd.options.mode.chained_assignment = None
 urllib3.disable_warnings()
+
+START_DATE = (date.today() + timedelta(days=-60)).strftime('%Y-%m-%d') 
+END_DATE = date.today().strftime('%Y-%m-%d')
 
 class BCRAVars:
 
@@ -22,6 +23,7 @@ class BCRAVars:
         self._base_url = 'https://api.bcra.gob.ar'
         self._endpoint_ppal_vars = '{BASE_URL}/estadisticas/v1/PrincipalesVariables'
         self._endpoint_var = '{BASE_URL}/estadisticas/v1/DatosVariable/{ID}/{START_DATE}/{END_DATE}'
+        self._output_dir = 'outputs'
         self.end_date = end_date if end_date else END_DATE
         self.start_date = start_date if start_date else START_DATE
 
@@ -131,13 +133,12 @@ class BCRAVars:
             else:
                 raise Exception("Error during API call")
         
-        folder = f'outputs'
-        isExist = os.path.exists(folder)
+        isExist = os.path.exists(self._output_dir)
 
         if not isExist:
-            os.makedirs(folder)
+            os.makedirs(self._output_dir)
         
-        final_df.to_csv(f'{folder}/{self.end_date}_bcra_dataset.csv', index=False)
+        final_df.to_csv(f'{self._output_dir}/{self.end_date}_bcra_dataset.csv', index=False)
 
     def run(self):
         
