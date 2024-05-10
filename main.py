@@ -10,7 +10,7 @@ def main():
     if not conditions:
         start_date = end_date = None
 
-    bcra = BCRAVars()
+    bcra = BCRAVars(start_date, end_date)
     bcra.run()
 
 if __name__ == "__main__":

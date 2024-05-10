@@ -8,8 +8,9 @@ from functools import cached_property
 
 import pandas as pd
 
+logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
-LOGGER.setLevel(logging.INFO)
+
 START_DATE = (date.today() + timedelta(days=-60)).strftime('%Y-%m-%d') 
 END_DATE = date.today().strftime('%Y-%m-%d')
 pd.options.mode.chained_assignment = None
@@ -21,8 +22,8 @@ class BCRAVars:
         self._base_url = 'https://api.bcra.gob.ar'
         self._endpoint_ppal_vars = '{BASE_URL}/estadisticas/v1/PrincipalesVariables'
         self._endpoint_var = '{BASE_URL}/estadisticas/v1/DatosVariable/{ID}/{START_DATE}/{END_DATE}'
-        self.end_date = end_date
-        self.start_date = start_date
+        self.end_date = end_date if end_date else END_DATE
+        self.start_date = start_date if start_date else START_DATE
 
     @cached_property    
     def _get_ppal_vars(self) -> dict: 
@@ -136,7 +137,7 @@ class BCRAVars:
         if not isExist:
             os.makedirs(folder)
         
-        final_df.to_csv(f'{folder}/{END_DATE}_bcra_dataset.csv', index=False)
+        final_df.to_csv(f'{folder}/{self.end_date}_bcra_dataset.csv', index=False)
 
     def run(self):
         

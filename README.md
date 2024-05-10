@@ -23,6 +23,7 @@ It's important to enter the correct formats for start and end date (YYYY-MM-DD).
 Otherwise, the script will only consider de last 2 months.
 
 **2. Variable IDs**
+
 Then, you will need to select the ids of the variables you want to analyze in the future.
 If you do not provide any id, the script will generate a file with all the variable that are available in the BRCA.
 
