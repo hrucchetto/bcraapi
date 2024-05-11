@@ -19,13 +19,19 @@ END_DATE = date.today().strftime('%Y-%m-%d')
 
 class BCRAVars:
 
-    def __init__(self, start_date: date = START_DATE, end_date: date = END_DATE):
+    def __init__(
+            self, 
+            start_date: date = START_DATE, 
+            end_date: date = END_DATE,
+            environment: str = 'production'
+        ):
         self._base_url = 'https://api.bcra.gob.ar'
         self._endpoint_ppal_vars = '{BASE_URL}/estadisticas/v1/PrincipalesVariables'
         self._endpoint_var = '{BASE_URL}/estadisticas/v1/DatosVariable/{ID}/{START_DATE}/{END_DATE}'
         self._output_dir = 'outputs'
         self.end_date = end_date if end_date else END_DATE
         self.start_date = start_date if start_date else START_DATE
+        self.environment = environment
 
     @cached_property    
     def _get_ppal_vars(self) -> dict: 
@@ -133,12 +139,17 @@ class BCRAVars:
             else:
                 raise Exception("Error during API call")
         
-        isExist = os.path.exists(self._output_dir)
-
-        if not isExist:
-            os.makedirs(self._output_dir)
+        if self.environment == 'production':
         
-        final_df.to_csv(f'{self._output_dir}/{self.end_date}_bcra_dataset.csv', index=False)
+            isExist = os.path.exists(self._output_dir)
+
+            if not isExist:
+                os.makedirs(self._output_dir)
+            
+            final_df.to_csv(f'{self._output_dir}/{self.end_date}_bcra_dataset.csv', index=False)
+        
+        else:
+            LOGGER.info('Test successfull')
 
     def run(self):
         

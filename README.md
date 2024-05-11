@@ -9,13 +9,13 @@ You can find all the packages needed, to run this program in your local computer
 
 ## Usage
 
-Running the following command you can get the selected data in your current directory within a folder called `output/<runtime_date>_bcra_dataset`.
+Running the following command you can get the selected data in your current directory within a file called `output/<runtime_date>_bcra_dataset`.
 
 ```bash
 $ python main.py
 ```
 
-You will be asked to enter some input during the process.
+You will be asked to enter some inputs during the process.
 
 **1. Start and end dates**
 
@@ -25,7 +25,7 @@ Otherwise, the script will only consider de last 2 months.
 **2. Variable IDs**
 
 Then, you will need to select the ids of the variables you want to analyze in the future.
-If you do not provide any id, the script will generate a file with all the variable that are available in the BRCA.
+If you do not provide any id, the script will generate a file with all the variables that are available in the BRCA.
 
 ## Analysis
 
@@ -34,4 +34,4 @@ You can find the documentation [here](https://duckdb.org/docs/index).
 
 ## Contact
 
-You can find me in [LinkedIn](https://www.linkedin.com/in/hugo-rucchetto/).
+You can reach me out in [LinkedIn](https://www.linkedin.com/in/hugo-rucchetto/).
