@@ -139,21 +139,22 @@ class BCRAVars:
             else:
                 raise Exception("Error during API call")
         
-        if self.environment == 'production':
         
-            isExist = os.path.exists(self._output_dir)
+        isExist = os.path.exists(self._output_dir)
 
-            if not isExist:
-                os.makedirs(self._output_dir)
-            
-            final_df.to_csv(f'{self._output_dir}/{self.end_date}_bcra_dataset.csv', index=False)
+        if not isExist:
+            os.makedirs(self._output_dir)
         
-        else:
-            LOGGER.info('Test successfull')
+        final_df.to_csv(f'{self._output_dir}/{self.end_date}_bcra_dataset.csv', index=False)
 
     def run(self):
         
         self._display_bcra_variables()
         variables = self._ask_for_vars()
-        self._save_vars(variables)
+        
+        if self.environment == 'production':
+            self._save_vars(variables)
+        
+        else:
+            LOGGER.info('Test successfull')
             
