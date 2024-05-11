@@ -1,12 +1,12 @@
 import logging
 import os
-import requests
-import unidecode
 import urllib3
 from datetime import date, timedelta
 from functools import cached_property
 
 import pandas as pd
+import requests
+import unidecode
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
@@ -86,6 +86,7 @@ class BCRAVars:
         '''
         Prints variables available in BCRA to users.
         '''
+
         LOGGER.info('Print BCRA variables')
         for k, v in self._get_ppal_vars.items():
             print(f'ID: {k}, {v}')
@@ -95,8 +96,8 @@ class BCRAVars:
         Displays data for each variable selected by the user.
         '''
 
-        final_df = pd.DataFrame()
         LOGGER.info(f'Period of analysis from {self.start_date} to {self.end_date}')
+        final_df = pd.DataFrame()
 
         for i, var in enumerate(vars):
 
@@ -128,7 +129,6 @@ class BCRAVars:
                 
                 else:
                     final_df = final_df.merge(curated_df, on='fecha', how='outer')
-
                 
             else:
                 raise Exception("Error during API call")

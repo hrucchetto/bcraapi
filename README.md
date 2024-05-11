@@ -27,6 +27,11 @@ Otherwise, the script will only consider de last 2 months.
 Then, you will need to select the ids of the variables you want to analyze in the future.
 If you do not provide any id, the script will generate a file with all the variable that are available in the BRCA.
 
+## Analysis
+
+The downloaded file can be queried with a DBMS such as `duckdb`.
+You can find the documentation [here](https://duckdb.org/docs/index).
+
 ## Contact
 
 You can find me in [LinkedIn](https://www.linkedin.com/in/hugo-rucchetto/).
