@@ -150,9 +150,9 @@ class BCRAVars:
     def run(self):
         
         self._display_bcra_variables()
-        variables = self._ask_for_vars()
         
         if self.environment == 'production':
+            variables = self._ask_for_vars()
             self._save_vars(variables)
         
         else:
