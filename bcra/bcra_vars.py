@@ -25,10 +25,10 @@ class BCRAVars:
             end_date: date = END_DATE,
             environment: str = 'production'
         ):
-        self._base_url = 'https://api.bcra.gob.ar'
-        self._endpoint_ppal_vars = '{BASE_URL}/estadisticas/v1/PrincipalesVariables'
-        self._endpoint_var = '{BASE_URL}/estadisticas/v1/DatosVariable/{ID}/{START_DATE}/{END_DATE}'
-        self._output_dir = 'outputs'
+        self.__base_url = 'https://api.bcra.gob.ar'
+        self.__endpoint_ppal_vars = '{BASE_URL}/estadisticas/v1/PrincipalesVariables'
+        self.__endpoint_var = '{BASE_URL}/estadisticas/v1/DatosVariable/{ID}/{START_DATE}/{END_DATE}'
+        self.__output_dir = 'outputs'
         self.end_date = end_date if end_date else END_DATE
         self.start_date = start_date if start_date else START_DATE
         self.environment = environment
@@ -41,8 +41,8 @@ class BCRAVars:
 
         LOGGER.info('Get variables from BCRA')
         r = requests.get(
-            self._endpoint_ppal_vars.format(
-                BASE_URL=self._base_url
+            self.__endpoint_ppal_vars.format(
+                BASE_URL=self.__base_url
             ), 
             verify=False
         )
@@ -64,7 +64,7 @@ class BCRAVars:
         else:
             raise Exception("Error during API call")
     
-    def _ask_for_vars(self) -> list:
+    def __ask_for_vars(self) -> list:
         
         vars = []
 
@@ -88,7 +88,7 @@ class BCRAVars:
         else:
             return list(self._get_ppal_vars)
     
-    def _display_bcra_variables(self):
+    def __display_bcra_variables(self):
         '''
         Prints variables available in BCRA to users.
         '''
@@ -97,21 +97,32 @@ class BCRAVars:
         for k, v in self._get_ppal_vars.items():
             print(f'ID: {k}, {v}')
 
-    def _save_vars(self, vars):
+    def __normalize_df(self, df: pd.DataFrame, var_id: str) -> pd.DataFrame:
+        
+        curated_df = df[['fecha', 'valor']]
+        curated_df['fecha'] = pd.to_datetime(df['fecha'], format='%d/%m/%Y').dt.date
+        curated_df['valor'] = curated_df['valor'].str.replace(',','.').astype('float64')
+
+        var_name = unidecode.unidecode(self._get_ppal_vars[var_id])
+        curated_df['variable'] = var_name   
+
+        return curated_df
+
+    def __save_vars(self, vars):
         '''
         Displays data for each variable selected by the user.
         '''
 
         LOGGER.info(f'Period of analysis from {self.start_date} to {self.end_date}')
-        final_df = pd.DataFrame()
+        dfs = []
 
-        for i, var in enumerate(vars):
+        for var in vars:
 
             LOGGER.info(f'Getting data from var_id: {var}')
             
             r = requests.get(
-                self._endpoint_var.format(
-                    BASE_URL=self._base_url,
+                self.__endpoint_var.format(
+                    BASE_URL=self.__base_url,
                     ID=var,
                     START_DATE=self.start_date,
                     END_DATE=self.end_date
@@ -124,36 +135,30 @@ class BCRAVars:
                 results = r.json()['results']
   
                 df = pd.DataFrame(results)
-                curated_df = df[['fecha', 'valor']]
-                curated_df['valor'] = curated_df['valor'].str.replace(',','.').str.replace('.','').astype('float64') 
-                new_name = unidecode.unidecode(self._get_ppal_vars[var])  
+                curated_df = self.__normalize_df(df, var)
 
-                curated_df.rename(columns={'valor': f'{new_name}'}, inplace=True)
-
-                if i == 0:
-                    final_df = curated_df
-                
-                else:
-                    final_df = final_df.merge(curated_df, on='fecha', how='outer')
+                dfs.append(curated_df)
+            
                 
             else:
                 raise Exception("Error during API call")
         
         
-        isExist = os.path.exists(self._output_dir)
+        isExist = os.path.exists(self.__output_dir)
 
         if not isExist:
-            os.makedirs(self._output_dir)
+            os.makedirs(self.__output_dir)
         
-        final_df.to_csv(f'{self._output_dir}/{self.end_date}_bcra_dataset.csv', index=False)
+        final_df = pd.concat(dfs, axis=0, ignore_index=True)
+        final_df.to_csv(f'{self.__output_dir}/{self.end_date}_bcra_dataset.csv', index=False)
 
     def run(self):
         
-        self._display_bcra_variables()
+        self.__display_bcra_variables()
         
         if self.environment == 'production':
-            variables = self._ask_for_vars()
-            self._save_vars(variables)
+            variables = self.__ask_for_vars()
+            self.__save_vars(variables)
         
         else:
             LOGGER.info('Test successfull')

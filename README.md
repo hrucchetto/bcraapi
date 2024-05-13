@@ -29,7 +29,9 @@ If you do not provide any id, the script will generate a file with all the varia
 
 ## Analysis
 
-The downloaded file can be queried with a DBMS such as `duckdb`.
+In this section you can find a link with a tile for 3 varibles: UVA, monetary policy and BADLAR rate (2024-01-01 to 2024-05-13).
+
+You can use the downloaded file with different tools, such as `duckdb`.
 You can find the documentation [here](https://duckdb.org/docs/index).
 
 ## Contact
