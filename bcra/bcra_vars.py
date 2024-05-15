@@ -21,9 +21,11 @@ class BCRAVars:
 
     def __init__(
             self, 
+            environment: str = 'production',
             start_date: date = START_DATE, 
             end_date: date = END_DATE,
-            environment: str = 'production'
+            vars: str = None
+            
         ):
         self.__base_url = 'https://api.bcra.gob.ar'
         self.__endpoint_ppal_vars = '{BASE_URL}/estadisticas/v1/PrincipalesVariables'
@@ -32,6 +34,7 @@ class BCRAVars:
         self.end_date = end_date if end_date else END_DATE
         self.start_date = start_date if start_date else START_DATE
         self.environment = environment
+        self.vars = vars.split(',') if vars else None
 
     @cached_property    
     def _get_ppal_vars(self) -> dict: 
@@ -150,14 +153,20 @@ class BCRAVars:
             os.makedirs(self.__output_dir)
         
         final_df = pd.concat(dfs, axis=0, ignore_index=True)
-        final_df.to_csv(f'{self.__output_dir}/{self.end_date}_bcra_dataset.csv', index=False)
+        final_df.to_csv(f'{self.__output_dir}/bcra_dataset.csv', index=False)
 
     def run(self):
         
         self.__display_bcra_variables()
         
         if self.environment == 'production':
-            variables = self.__ask_for_vars()
+
+            if not self.vars:
+                variables = self.__ask_for_vars()
+            
+            else:
+                variables = self.vars
+
             self.__save_vars(variables)
         
         else:

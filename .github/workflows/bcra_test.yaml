@@ -1,4 +1,4 @@
-name: bcra-ci
+name: bcra_test
 
 on: [push]
 
@@ -24,4 +24,4 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Test Script
-        run: python main.py test
+        run: python bcra.py -e test
