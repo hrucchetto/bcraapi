@@ -2,7 +2,7 @@ name: bcra_daily
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # Runs at 00:00 UTC every day.
+    - cron: '0 8 * * *'
 
 jobs:
   run-script:

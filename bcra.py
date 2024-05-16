@@ -2,7 +2,7 @@ import argparse
 import logging
 
 from src.analyzer import Analyzer
-from src.bcra_vars import BCRAVars
+from src.bcra_importer import BCRAImporter
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ def main():
         start_date = str(input('Please enter the start date of the analysis (YYYY-MM-DD): '))
         end_date = str(input('Now the end date of the analysis (YYYY-MM-DD): '))
     
-    bcra = BCRAVars(env, start_date, end_date, vars)
+    bcra = BCRAImporter(env, start_date, end_date, vars)
     bcra.run()
 
     LOGGER.info('Analyze dataframe')
