@@ -1,0 +1,40 @@
+name: Run Python Script and Commit Results
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # Runs at 00:00 UTC every day.
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensures we get all history for branches and tags
+
+      - name: setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11.5'  # Specify the Python version
+
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: run script
+        run: python bcra.py -e production -i 2024-01-01 -f $(date +%F) -v 31,34,35
+
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "update files" --allow-empty)
+      
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main

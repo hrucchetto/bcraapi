@@ -1,8 +1,8 @@
 import argparse
 import logging
 
-from bcra.analyzer import Analyzer
-from bcra.bcra_vars import BCRAVars
+from src.analyzer import Analyzer
+from src.bcra_vars import BCRAVars
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
