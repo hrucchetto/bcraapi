@@ -17,7 +17,7 @@ urllib3.disable_warnings()
 START_DATE = (date.today() + timedelta(days=-60)).strftime('%Y-%m-%d') 
 END_DATE = date.today().strftime('%Y-%m-%d')
 
-class BCRAImporter:
+class Importer:
 
     def __init__(
             self, 
