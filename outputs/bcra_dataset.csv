@@ -136,6 +136,7 @@ fecha,valor,variable
 2024-05-14,934.94,"Unidad de Valor Adquisitivo (UVA) (en pesos -con dos decimales-, base 31.3.2016=14.05)"
 2024-05-15,938.19,"Unidad de Valor Adquisitivo (UVA) (en pesos -con dos decimales-, base 31.3.2016=14.05)"
 2024-05-16,941.46,"Unidad de Valor Adquisitivo (UVA) (en pesos -con dos decimales-, base 31.3.2016=14.05)"
+2024-05-17,944.03,"Unidad de Valor Adquisitivo (UVA) (en pesos -con dos decimales-, base 31.3.2016=14.05)"
 2024-01-02,171.46,Tasa de Politica Monetaria (en % e.a.)
 2024-01-03,171.46,Tasa de Politica Monetaria (en % e.a.)
 2024-01-04,171.46,Tasa de Politica Monetaria (en % e.a.)
@@ -226,6 +227,7 @@ fecha,valor,variable
 2024-05-13,64.82,Tasa de Politica Monetaria (en % e.a.)
 2024-05-14,49.15,Tasa de Politica Monetaria (en % e.a.)
 2024-05-15,49.15,Tasa de Politica Monetaria (en % e.a.)
+2024-05-16,49.15,Tasa de Politica Monetaria (en % e.a.)
 2024-01-02,180.63,BADLAR en pesos de bancos privados (en % e.a.)
 2024-01-03,183.53,BADLAR en pesos de bancos privados (en % e.a.)
 2024-01-04,183.86,BADLAR en pesos de bancos privados (en % e.a.)
@@ -315,3 +317,4 @@ fecha,valor,variable
 2024-05-10,47.27,BADLAR en pesos de bancos privados (en % e.a.)
 2024-05-13,47.81,BADLAR en pesos de bancos privados (en % e.a.)
 2024-05-14,47.0,BADLAR en pesos de bancos privados (en % e.a.)
+2024-05-15,37.78,BADLAR en pesos de bancos privados (en % e.a.)
