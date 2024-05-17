@@ -2,7 +2,7 @@ name: bcra_daily
 
 on:
   schedule:
-    - cron: '0 8 * * *'
+    - cron: '0 18 * * *'
 
 jobs:
   run-script:
@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: run script
-        run: python bcra.py -e production -i 2024-01-01 -f $(date +%F) -v 31,34,35
+        run: python bcra.py -e production -i $(date --date='2 year ago' +%F) -f $(date +%F) -v 31,34,35
 
       - name: commit files
         run: |
