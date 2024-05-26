@@ -1,7 +1,6 @@
 import argparse
 import logging
 
-from src.analyzer import Analyzer
 from src.importer import Importer
 
 logging.basicConfig(level=logging.INFO)
@@ -32,10 +31,6 @@ def main():
     
     bcra = Importer(env, start_date, end_date, vars)
     bcra.run()
-
-    LOGGER.info('Analyze dataframe')
-    analyzer = Analyzer()
-    analyzer.visualize()
 
 if __name__ == "__main__":
     main()
