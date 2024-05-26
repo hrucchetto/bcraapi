@@ -7,6 +7,9 @@ from functools import cached_property
 import pandas as pd
 import requests
 import unidecode
+from sqlalchemy import create_engine, text
+
+import src.queries as queries
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
@@ -28,13 +31,14 @@ class Importer:
             
         ):
         self.__base_url = 'https://api.bcra.gob.ar'
+        self.__db_name = 'bcra'
         self.__endpoint_ppal_vars = '{BASE_URL}/estadisticas/v1/PrincipalesVariables'
         self.__endpoint_var = '{BASE_URL}/estadisticas/v1/DatosVariable/{ID}/{START_DATE}/{END_DATE}'
         self.__output_dir = 'outputs'
         self.end_date = end_date if end_date else END_DATE
         self.start_date = start_date if start_date else START_DATE
         self.environment = environment
-        self.vars = vars.split(',') if vars else None
+        self.vars = list(self._get_ppal_vars) if vars == 'all' else vars.split(',') if vars else None
 
     @cached_property    
     def _get_ppal_vars(self) -> dict: 
@@ -104,7 +108,7 @@ class Importer:
         
         curated_df = df[['fecha', 'valor']]
         curated_df['fecha'] = pd.to_datetime(df['fecha'], format='%d/%m/%Y').dt.date
-        curated_df['valor'] = curated_df['valor'].str.replace(',','.').astype('float64')
+        curated_df['valor'] = curated_df['valor'].str.replace('.','').str.replace(',','.').astype('float64')
 
         var_name = unidecode.unidecode(self._get_ppal_vars[var_id])
         curated_df['variable'] = var_name   
@@ -152,8 +156,33 @@ class Importer:
         if not isExist:
             os.makedirs(self.__output_dir)
         
-        final_df = pd.concat(dfs, axis=0, ignore_index=True)
-        final_df.to_csv(f'{self.__output_dir}/bcra_dataset.csv', index=False)
+        temp_df = pd.concat(dfs, axis=0, ignore_index=True)
+        
+        engine = create_engine(f'sqlite:///{self.__output_dir}/{self.__db_name}.db')
+        conn = engine.connect()
+        
+        temp_df.to_sql('bcra_temp', engine, if_exists='replace', index=False)
+
+        LOGGER.info('Getting min date for the new import')
+        min_date = pd.read_sql(queries.MIN_DATE.format(table='bcra_temp'), engine)['min_date'].values[0]
+        
+        LOGGER.info('Deleting duplicated rows')
+        delete_query = queries.DELETE_ROWS.format(
+            table='bcra_final',
+            where_condition=f'fecha >= \'{min_date}\''
+        )
+        conn.execute(text(delete_query))
+        conn.commit()
+
+        LOGGER.info('Inserting new rows')
+        insert_query = queries.INSERT_ROWS.format(
+            target_table='bcra_final',
+            source_table='bcra_temp'
+        )
+        conn.execute(text(insert_query))
+        conn.commit()
+
+        conn.close()
 
     def run(self):
         
