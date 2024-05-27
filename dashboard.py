@@ -1,9 +1,4 @@
 import logging
-import sys
-from pathlib import Path
-
-path_root = Path(__file__).parents[1]
-sys.path.append(str(path_root))
 
 import altair as alt
 import pandas as pd
@@ -92,7 +87,7 @@ class Analyzer:
 
         st.markdown("<h2 style='color: #1b89de;'>Last value for key variables</h2>", unsafe_allow_html=True)
         
-        self.__metrics()
+        #self.__metrics()
 
         st.markdown("<h2 style='color: #1b89de;'>Variables evolution</h2>", unsafe_allow_html=True)
 
