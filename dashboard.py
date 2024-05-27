@@ -1,6 +1,5 @@
 import logging
 
-import altair as alt
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -39,7 +38,7 @@ class Analyzer:
                     self.engine
                 )
 
-            col.metric(label=metrics_dict[metric] + str(df['date'].values[0]), value=str(df['last_value'].values[0]) + str('%' if '%' in metric else ''))
+            col.metric(label=metrics_dict[metric] + ' (' + str(df['date'].values[0]) + ')', value=str(df['last_value'].values[0]) + str(' %' if '%' in metric else ''))
 
     def __full_df(self):
 
@@ -84,12 +83,8 @@ class Analyzer:
         )
 
         st.markdown("<h1 style='color: #1b89de;'>BCRA Dashboard</h1>", unsafe_allow_html=True)
-
-        st.markdown("<h2 style='color: #1b89de;'>Last value for key variables</h2>", unsafe_allow_html=True)
         
         self.__metrics()
-
-        st.markdown("<h2 style='color: #1b89de;'>Variables evolution</h2>", unsafe_allow_html=True)
 
         self.__full_df()
 

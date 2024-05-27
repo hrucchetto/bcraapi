@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: run script
-        run: python bcra.py -e production -i $(date --date='10 days ago' +%F) -f $(date +%F) -v all
+        run: python bcra.py -a import -i $(date --date='10 days ago' +%F) -f $(date +%F) -v all
 
       - name: commit files
         run: |

@@ -24,7 +24,7 @@ class Importer:
 
     def __init__(
             self, 
-            environment: str = 'production',
+            action: str = 'import',
             start_date: date = START_DATE, 
             end_date: date = END_DATE,
             vars: str = None
@@ -37,7 +37,7 @@ class Importer:
         self.__output_dir = 'outputs'
         self.end_date = end_date if end_date else END_DATE
         self.start_date = start_date if start_date else START_DATE
-        self.environment = environment
+        self.action = action
         self.vars = list(self._get_ppal_vars) if vars == 'all' else vars.split(',') if vars else None
 
     @cached_property    
@@ -194,7 +194,7 @@ class Importer:
         
         self.__display_bcra_variables()
         
-        if self.environment == 'production':
+        if self.action == 'import':
 
             if not self.vars:
                 variables = self.__ask_for_vars()

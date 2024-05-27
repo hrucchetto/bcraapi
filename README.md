@@ -18,44 +18,47 @@ Note: I suggest creating a virtual enviroment to isolate the project.
 
 The script has four arguments:
 
-- Environment (required): Possible values (production, test).
+- Action (required): Possible values (import, visualize, test).
 - Initial and final date (optional).
 - Variables (optional).
 
-Running the following command you can get the data in your current directory within a file called `outputs/bcra_dataset.csv`.
+Running the following command you can store/update data within a sqlite db in `outputs/bcra.db`.
 
 ```bash
-$ python bcra.py -e environment -i init_date -f final_date -v vars 
+$ python bcra.py -a action -i init_date -f final_date -v vars 
 ```
 
 Note: if you only want to test the API connection you can run this command:
 
 ```bash
-$ python bcra.py -e test
+$ python bcra.py -a test
 ```
 
-**1. Environment**
+**1. Action**
 
-Possible values: production or test.
+- Import: It updates the data within a sqlite file.
+- Visualize: This class is used to build a streamlit app to visualize the data obtained.
+- Test: It's used to test that the code does not have issues when new changes are pushed.
 
 **2. Initial and final dates**
 
 It's important to enter the correct format for start and end date (YYYY-MM-DD).
-Otherwise, the script will only consider de last 2 months.
+Otherwise, the script will only consider the last 2 months by default.
 
 **3. Variable IDs**
 
 Then, you will need to select the ids of the variables you want to analyze in the future.
 If you do not provide any id, the script will generate a file with all the variables that are available in the BRCA.
 
-## Analysis (To be replaced)
+## Automatic update
 
-The `Analyzer` class will take the csv got from the previous step and create a tile with the data obtained. The result will be stored in the `outputs` folder. 
+In `.github/workflows` folder there is a yaml file with a process to update the database automatically.
+The jobs runs daily and updates the db with new values for the variables.
 
-You can find a link with a tile with the following varibles: UVA, monetary policy and BADLAR rate.
+## Analysis
 
-You can use the downloaded file and analyze it with a different tool, such as `duckdb`.
-Please check the full documentation [here](https://duckdb.org/docs/index).
+`dashboad.py` contains the code to build a streamlit application to visualize some of the variable we get from the API. 
+You can check a preliminar version [here](https://bcraapi.streamlit.app/).
 
 ## Contact
 

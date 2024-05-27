@@ -9,12 +9,12 @@ LOGGER = logging.getLogger(__name__)
 def main():
     
     LOGGER.info('Set parameters')
-    parser = argparse.ArgumentParser(description='Script to get BCRA data, you need to enter start_date, end_date and environment')
+    parser = argparse.ArgumentParser(description='Script to get BCRA data')
     parser.add_argument(
-        '-e',
-        '--environment', 
+        '-a',
+        '--action', 
         type=str, 
-        choices=['production', 'test'], 
+        choices=['import', 'visualize', 'test'], 
         required=True
     )
     parser.add_argument('-i', '--init_date', type=str, required=False)
@@ -22,14 +22,14 @@ def main():
     parser.add_argument('-v','--vars', type=str, required=False)
 
     args = parser.parse_args()
-    env, start_date, end_date, vars = args.environment, args.init_date, args.final_date, args.vars
+    action, start_date, end_date, vars = args.action, args.init_date, args.final_date, args.vars
     
     LOGGER.info('Get inputs from users')
-    if (env == 'production') and (start_date == None or end_date == None):
+    if (action == 'import') and (start_date == None or end_date == None):
         start_date = str(input('Please enter the start date of the analysis (YYYY-MM-DD): '))
         end_date = str(input('Now the end date of the analysis (YYYY-MM-DD): '))
     
-    bcra = Importer(env, start_date, end_date, vars)
+    bcra = Importer(action, start_date, end_date, vars)
     bcra.run()
 
 if __name__ == "__main__":
