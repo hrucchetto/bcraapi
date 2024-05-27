@@ -87,5 +87,3 @@ class Analyzer:
         self.__metrics()
 
         self.__full_df()
-
-Analyzer().visualize()

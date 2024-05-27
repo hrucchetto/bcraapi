@@ -57,7 +57,7 @@ The jobs runs daily and updates the db with new values for the variables.
 
 ## Analysis
 
-`dashboad.py` contains the code to build a streamlit application to visualize some of the variable we get from the API. 
+`dashboad.py` contains the code to build a streamlit application to visualize some of the variables we get using the API. 
 You can check a preliminar version [here](https://bcraapi.streamlit.app/).
 
 ## Contact
