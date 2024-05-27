@@ -48,7 +48,7 @@ Otherwise, the script will only consider de last 2 months.
 Then, you will need to select the ids of the variables you want to analyze in the future.
 If you do not provide any id, the script will generate a file with all the variables that are available in the BRCA.
 
-## Analysis
+## Analysis (To be replaced)
 
 The `Analyzer` class will take the csv got from the previous step and create a tile with the data obtained. The result will be stored in the `outputs` folder. 
 

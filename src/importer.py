@@ -137,16 +137,22 @@ class Importer:
                 verify=False
             )
 
+            r_json = r.json()
+            error_messages = r_json['errorMessages']
+
             if r.status_code == 200:
                 
-                results = r.json()['results']
+                results = r_json['results']
   
                 df = pd.DataFrame(results)
                 curated_df = self.__normalize_df(df, var)
 
                 dfs.append(curated_df)
-            
                 
+            elif 'No se encontraron datos para los parámetros seleccionados.' in error_messages:
+                LOGGER.info('There is no new data for this variable')
+                continue
+            
             else:
                 raise Exception("Error during API call")
         

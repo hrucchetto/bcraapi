@@ -44,7 +44,7 @@ class Analyzer:
                     self.engine
                 )
 
-            col.metric(label=f'{metrics_dict[metric]} ({df['date'].values[0]})', value=df['last_value'])
+            col.metric(label=f'{metrics_dict[metric]} ({df['date'].values[0]})', value=f'{df['last_value'].values[0]} {'%' if '%' in metric else ''}')
 
     def __full_df(self):
 
@@ -88,9 +88,13 @@ class Analyzer:
             layout='wide'
         )
 
-        st.markdown("<h1 style='text-align: center; color: #1b89de;'>BCRA Dashboard</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='color: #1b89de;'>BCRA Dashboard</h1>", unsafe_allow_html=True)
 
+        st.markdown("<h2 style='color: #1b89de;'>Last value for key variables</h2>", unsafe_allow_html=True)
+        
         self.__metrics()
+
+        st.markdown("<h2 style='color: #1b89de;'>Variables evolution</h2>", unsafe_allow_html=True)
 
         self.__full_df()
 
