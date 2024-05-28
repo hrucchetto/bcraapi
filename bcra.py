@@ -1,8 +1,8 @@
 import argparse
 import logging
 
-from src.analyzer import Analyzer
 from src.importer import Importer
+from src.visualizer import Visualizer
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
@@ -33,14 +33,14 @@ def main():
             start_date = str(input('Please enter the start date of the analysis (YYYY-MM-DD): '))
             end_date = str(input('Now the end date of the analysis (YYYY-MM-DD): '))
     
-        bcra = Importer(action, start_date, end_date, vars)
-        bcra.run()
+        bcra_importer = Importer(action, start_date, end_date, vars)
+        bcra_importer.run()
 
     else:
 
         LOGGER.info('Visualize BCRA dashboard')
-        bcra_analyzer = Analyzer()
-        bcra_analyzer.visualize()
+        bcra_visualizer = Visualizer()
+        bcra_visualizer.run()
 
 if __name__ == "__main__":
     main()

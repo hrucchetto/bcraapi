@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
 
-class Analyzer:
+class Visualizer:
 
     def __init__(self):
         self.engine = create_engine('sqlite:///outputs/bcra.db')
@@ -75,7 +75,7 @@ class Analyzer:
 
         st.plotly_chart(fig, use_container_width=True)
 
-    def visualize(self):
+    def run(self):
 
         st.set_page_config(
             page_title='BCRA Main Variables Dashboard',

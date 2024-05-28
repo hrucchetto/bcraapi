@@ -55,9 +55,9 @@ If you do not provide any id, the script will generate a file with all the varia
 In `.github/workflows` folder there is a yaml file with a process to update the database automatically.
 The jobs runs daily and updates the db with new values for the variables.
 
-## Analysis
+## Visualize
 
-`dashboad.py` contains the code to build a streamlit application to visualize some of the variables we get using the API. 
+`Visualyzer` class contains the code to build a streamlit application to visualize some tiles with data from the db we created. 
 You can check a preliminar version [here](https://bcraapi.streamlit.app/).
 
 ## Contact
