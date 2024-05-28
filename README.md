@@ -57,7 +57,7 @@ The jobs runs daily and updates the db with new values for the variables.
 
 ## Visualize
 
-`Visualyzer` class contains the code to build a streamlit application to visualize some tiles with data from the db we created. 
+`Visualizer` class contains the code to build a streamlit application to visualize some tiles with data from the db we created. 
 You can check a preliminar version [here](https://bcraapi.streamlit.app/).
 
 ## Contact
