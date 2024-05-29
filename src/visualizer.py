@@ -2,6 +2,7 @@ import logging
 
 import pandas as pd
 import plotly.express as px
+import statsmodels as sm
 import streamlit as st
 from sqlalchemy import create_engine
 
@@ -43,35 +44,73 @@ class Visualizer:
     def __full_df(self):
 
         LOGGER.info('Tile with the complete list of variables')
-        full_df = pd.read_sql(queries.FULL_DF, self.engine)
-        full_df.rename(
+        df = pd.read_sql(queries.FULL_DF, self.engine)
+        df.rename(
             columns={
                 'fecha': 'date',
                 'valor': 'value'
             }, 
             inplace=True
         )
+        df['date'] = pd.to_datetime(df['date'])
 
         data_set = st.multiselect(
             label="Pick varibles to analyze", 
-            options=full_df['variable'].unique(),
+            options=df['variable'].unique(),
             default='Inflacion mensual (variacion en %)'
         )
 
-        fig = px.line(
-            full_df[full_df['variable'].isin(data_set)], 
-            x='date', 
-            y='value', 
-            color='variable',
-            title='BCRA Analysis'
-        )
+        # Date filter
+        st.sidebar.subheader('Date Filter')
+        start_date = st.sidebar.date_input('Start date', df['date'].min())
+        end_date = st.sidebar.date_input('End date', df['date'].max())
 
-        fig.update_layout(legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        ))
+        # Filter data based on date range
+        if start_date > end_date:
+            st.error("Error: End date must fall after start date.")
+        else:
+            filtered_data = df[(df['date'] >= pd.Timestamp(start_date)) & (df['date'] <= pd.Timestamp(end_date))]
+
+
+        st.sidebar.subheader('Plot Settings')
+        plot_type = st.sidebar.selectbox('Select plot type', ['Line Plot', 'Bar Chart', 'Scatter Plot'])
+        add_trendline = st.sidebar.checkbox('Add Trendline')
+        
+        st.write("## Plot")
+        if plot_type == 'Line Plot':
+            fig = px.scatter(
+                filtered_data[filtered_data['variable'].isin(data_set)], 
+                x='date', 
+                y='value', 
+                color= 'variable',
+                title='BCRA Analysis',
+                trendline="ols" if add_trendline else None
+            )
+            fig.update_traces(mode='lines+markers')
+        elif plot_type == 'Bar Chart':
+            fig = px.bar(
+                filtered_data[filtered_data['variable'].isin(data_set)], 
+                x='date', 
+                y='value'
+            )
+        elif plot_type == 'Scatter Plot':
+            fig = px.scatter(
+                filtered_data[filtered_data['variable'].isin(data_set)], 
+                x='date', 
+                y='value',
+                trendline="ols" if add_trendline else None
+            )
+
+        fig.update_layout(
+            legend=dict(
+                yanchor="top",
+                y=0.99,
+                xanchor="left",
+                x=0.01
+            ),
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False)
+        )
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -82,7 +121,7 @@ class Visualizer:
             layout='wide'
         )
 
-        st.markdown("<h1 style='color: #1b89de;'>BCRA Dashboard</h1>", unsafe_allow_html=True)
+        st.markdown("<h1>BCRA Dashboard</h1>", unsafe_allow_html=True)
         
         self.__metrics()
 
