@@ -194,16 +194,11 @@ class Importer:
         
         self.__display_bcra_variables()
         
-        if self.action == 'import':
-
-            if not self.vars:
-                variables = self.__ask_for_vars()
-            
-            else:
-                variables = self.vars
-
-            self.__save_vars(variables)
+        if not self.vars:
+            variables = self.__ask_for_vars()
         
         else:
-            LOGGER.info('Test successfull')
+            variables = self.vars
+
+        self.__save_vars(variables)
             

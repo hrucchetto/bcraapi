@@ -15,7 +15,7 @@ def main():
         '-a',
         '--action', 
         type=str, 
-        choices=['import', 'visualize', 'test'], 
+        choices=['import', 'visualize'], 
         default='visualize'
     )
     parser.add_argument('-i', '--init_date', type=str, required=False)
@@ -25,11 +25,11 @@ def main():
     args = parser.parse_args()
     action, start_date, end_date, vars = args.action, args.init_date, args.final_date, args.vars
     
-    if action in ['import', 'test']:
+    if action == 'import':
         
         LOGGER.info('Starting import process')
         
-        if action == 'import' and (start_date == None or end_date == None):
+        if start_date == None or end_date == None:
             start_date = str(input('Please enter the start date of the analysis (YYYY-MM-DD): '))
             end_date = str(input('Now the end date of the analysis (YYYY-MM-DD): '))
     

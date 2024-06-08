@@ -1,7 +1,7 @@
 # BCRA Importer
 
-During 2024 BCRA launched some endpoints to import the most revelant Argentine economic variables. 
-The idea of the script is to automate the import and visualize the results.
+During 2024 Central Bank of Argentine Republic (BCRA) published its API with several endpoints to import the most revelant variables. 
+The idea of the script is to automate the import and visualize the results using a python program.
 More details about the endpoints can be found [here](https://www.bcra.gob.ar/Catalogo/apis.asp?fileName=principales-variables-v1).
 
 ## Setup environment
@@ -18,8 +18,9 @@ Note: I suggest creating a virtual enviroment to isolate the project.
 
 The script has four arguments:
 
-- Action (required): Possible values (import, visualize, test).
-- Initial and final date (optional).
+- Action (required): Possible values (import, visualize = default value).
+- Initial date (optional).
+- Final data (optional).
 - Variables (optional).
 
 Running the following command you can store/update data within a sqlite db in `outputs/bcra.db`.
@@ -28,17 +29,10 @@ Running the following command you can store/update data within a sqlite db in `o
 $ python bcra.py -a action -i init_date -f final_date -v vars 
 ```
 
-Note: if you only want to test the API connection you can run this command:
-
-```bash
-$ python bcra.py -a test
-```
-
 **1. Action**
 
-- Import: It updates the data within a sqlite file.
+- Import: It updates a final table stored within a sqlite database.
 - Visualize: This class is used to build a streamlit app to visualize the data obtained.
-- Test: It's used to test that the code does not have issues when new changes are pushed.
 
 **2. Initial and final dates**
 
@@ -59,7 +53,3 @@ The jobs runs daily and updates the db with new values for the variables.
 
 `Visualizer` class contains the code to build a streamlit application to visualize some tiles with data from the db we created. 
 You can check a preliminar version [here](https://bcraapi.streamlit.app/).
-
-## Contact
-
-You can reach me out in [LinkedIn](https://www.linkedin.com/in/hugo-rucchetto/).

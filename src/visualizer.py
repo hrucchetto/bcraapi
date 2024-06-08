@@ -117,11 +117,11 @@ class Visualizer:
     def run(self):
 
         st.set_page_config(
-            page_title='BCRA Main Variables Dashboard',
+            page_title='BCRA Panel',
             layout='wide'
         )
 
-        st.markdown("<h1>BCRA Dashboard</h1>", unsafe_allow_html=True)
+        st.markdown("<h1>BCRA Metrics</h1>", unsafe_allow_html=True)
         
         self.__metrics()
 
