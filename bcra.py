@@ -38,7 +38,6 @@ def main():
 
     else:
 
-        LOGGER.info('Visualize BCRA dashboard')
         bcra_visualizer = Visualizer()
         bcra_visualizer.run()
 
