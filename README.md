@@ -1,4 +1,4 @@
-# BCRA Importer
+# BCRA Variables Dashboard
 
 During 2024 Central Bank of Argentine Republic (BCRA) published its API with several endpoints to import the most revelant variables. 
 The idea of the script is to automate the import and visualize the results using a python program.

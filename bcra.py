@@ -1,15 +1,14 @@
 import argparse
 import logging
 
-from src.importer import Importer
-from src.visualizer import Visualizer
+from classes.importer import Importer
+from classes.visualizer import Visualizer
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
 def main():
     
-    LOGGER.info('Set parameters')
     parser = argparse.ArgumentParser(description='Script to get BCRA data')
     parser.add_argument(
         '-a',

@@ -9,7 +9,7 @@ import requests
 import unidecode
 from sqlalchemy import create_engine, text
 
-import src.queries as queries
+import classes.configs.queries as queries
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)

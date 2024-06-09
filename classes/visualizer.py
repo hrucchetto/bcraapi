@@ -6,7 +6,8 @@ import statsmodels as sm
 import streamlit as st
 from sqlalchemy import create_engine
 
-import src.queries as queries
+import classes.configs.config as config
+import classes.configs.queries as queries
 
 logging.basicConfig(level=logging.INFO)
 
@@ -24,7 +25,7 @@ class Visualizer:
         data_set = st.multiselect(
             label="Choose varibles to compare", 
             options=self.__bcra_variables,
-            default=['Inflacion mensual (variacion en %)', 'Tasa de Politica Monetaria (en % e.a.)']
+            default=['Monthly Inflation Rate', 'Monetary policy rate (% e.a)']
         )
 
         pivoted_df = self.__df_pivot()
@@ -44,6 +45,7 @@ class Visualizer:
             }
         )
         full_df['date'] = pd.to_datetime(full_df['date'])
+        full_df['variable'] = full_df['variable'].map(config.MAIN_METRICS)
 
         return full_df
 
@@ -69,10 +71,9 @@ class Visualizer:
         data_set = st.multiselect(
             label="Choose varibles to display", 
             options=self.__bcra_variables,
-            default='Inflacion mensual (variacion en %)'
+            default='Monthly Inflation Rate'
         )
 
-        # Filter data based on date range
         if start_date > end_date:
             st.error("Error: End date must fall after start date.")
         else:
@@ -116,27 +117,26 @@ class Visualizer:
 
     def __metrics_plot(self):
 
-        metrics_dict = {
-            'Inflacion mensual (variacion en %)': 'Monthly Inflation Rate',
-            'Inflacion interanual (variacion en % i.a.)': 'YOY Inflation Rate',
-            'Tipo de Cambio Minorista ($ por USD) Comunicacion B 9791 - Promedio vendedor': 'Exchange Rate',
-            'BADLAR en pesos de bancos privados (en % e.a.)': 'BADLAR Rate',
-            'Indice para Contratos de Locacion (ICL-Ley 27.551, con dos decimales, base 30.6.20=1)': 'ICL Index'
-        }
-
         st.write("## Main Metrics")
-        metrics_cols = st.columns(len(metrics_dict))
+        data_set = st.multiselect(
+            label="Choose varibles to include", 
+            options=self.__bcra_variables,
+            default=['Exchange Rate', 'Inflation Rate (YoY)','Monthly Inflation Rate']
+        )
 
-        for col, metric in zip(metrics_cols, metrics_dict):
+        columns = st.columns(4)
 
+        for i, metric in enumerate(data_set):
+            
+            col = columns[i % 4]
             df = pd.read_sql(
                 queries.LAST_AVAILABLE_VALUE.format(
-                    variable=metric
+                    variable=[k for k, v in config.MAIN_METRICS.items() if v == metric][0]
                     ),
                     self.__engine
                 )
 
-            col.metric(label=metrics_dict[metric] + ' (' + str(df['date'].values[0]) + ')', value=str(df['last_value'].values[0]) + str(' %' if '%' in metric else ''))
+            col.metric(label=metric + ' (' + str(df['date'].values[0]) + ')', value=str(df['last_value'].values[0]) + str(' %' if '%' in metric else ''))
 
     def run(self):
 
