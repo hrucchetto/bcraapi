@@ -32,8 +32,8 @@ class Importer:
         ):
         self.__base_url = 'https://api.bcra.gob.ar'
         self.__db_name = 'bcra'
-        self.__endpoint_ppal_vars = '{BASE_URL}/estadisticas/v1/PrincipalesVariables'
-        self.__endpoint_var = '{BASE_URL}/estadisticas/v1/DatosVariable/{ID}/{START_DATE}/{END_DATE}'
+        self.__endpoint_ppal_vars = '{BASE_URL}/estadisticas/v2.0/PrincipalesVariables'
+        self.__endpoint_var = '{BASE_URL}/estadisticas/v2.0/DatosVariable/{ID}/{START_DATE}/{END_DATE}'
         self.__output_dir = 'outputs'
         self.end_date = end_date if end_date else END_DATE
         self.start_date = start_date if start_date else START_DATE
@@ -53,6 +53,8 @@ class Importer:
             ), 
             verify=False
         )
+
+        print(r.status_code)
 
         if r.status_code == 200:
 
@@ -107,8 +109,7 @@ class Importer:
     def __normalize_df(self, df: pd.DataFrame, var_id: str) -> pd.DataFrame:
         
         curated_df = df[['fecha', 'valor']]
-        curated_df['fecha'] = pd.to_datetime(df['fecha'], format='%d/%m/%Y').dt.date
-        curated_df['valor'] = curated_df['valor'].str.replace('.','').str.replace(',','.').astype('float64')
+        curated_df['fecha'] = pd.to_datetime(df['fecha'], format='%Y-%m-%d').dt.date
 
         var_name = unidecode.unidecode(self._get_ppal_vars[var_id])
         curated_df['variable'] = var_name   
@@ -138,7 +139,6 @@ class Importer:
             )
 
             r_json = r.json()
-            error_messages = r_json['errorMessages']
 
             if r.status_code == 200:
                 
@@ -149,12 +149,15 @@ class Importer:
 
                 dfs.append(curated_df)
                 
-            elif 'No se encontraron datos para los parámetros seleccionados.' in error_messages:
-                LOGGER.info('There is no new data for this variable')
-                continue
+            else: 
+                error_messages = r_json['errorMessages']
+                
+                if 'No existen registros para los parámetros enviados.' in error_messages:
+                    LOGGER.info('There is no new data for this variable')
+                    continue
             
-            else:
-                raise Exception("Error during API call")
+                else:
+                    raise Exception("Error during API call")
         
         
         isExist = os.path.exists(self.__output_dir)
