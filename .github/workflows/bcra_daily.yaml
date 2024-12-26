@@ -1,8 +1,8 @@
 name: bcra_daily
 
-on:
-  schedule:
-    - cron: '0 7 * * *'
+# on:
+#   schedule:
+#     - cron: '0 7 * * *'
 
 jobs:
   run-script:
